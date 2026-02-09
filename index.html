@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Important Questions 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Itim&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 25%, #ffe4e9 50%, #ffd1dc 75%, #ffb6c1 100%);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: '💕';
+      position: fixed;
+      font-size: 24px;
+      opacity: 0.3;
+      top: 10%;
+      left: 5%;
+      animation: float 4s ease-in-out infinite;
+    }
+    body::after {
+      content: '✨';
+      position: fixed;
+      font-size: 20px;
+      opacity: 0.4;
+      top: 20%;
+      right: 8%;
+      animation: float 3s ease-in-out infinite 1s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: clamp(24px, 6vw, 48px);
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(255, 105, 180, 0.25), 0 0 0 1px rgba(255, 182, 193, 0.5);
+      width: 100%;
+      max-width: min(360px, 90vw);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    .box::before {
+      content: '💖';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    h1 {
+      font-family: 'Itim', cursive;
+      color: #c71585;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+      margin: 24px 0 28px;
+      line-height: 1.4;
+    }
+    .btn-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+      position: relative;
+      min-height: 50px;
+    }
+    button {
+      padding: 14px 28px;
+      font-size: clamp(15px, 4vw, 17px);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    button:active {
+      transform: scale(0.96);
+    }
+    #yes {
+      background: linear-gradient(135deg, #ff6b9d 0%, #ee2a7b 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+    }
+    #no {
+      background: linear-gradient(135deg, #d4a5a5 0%, #c99696 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+    #msg {
+      margin-top: 20px;
+      font-size: clamp(14px, 3.5vw, 16px);
+      color: #b84d6b;
+      min-height: 24px;
+      font-weight: 600;
+    }
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      .box { padding: 28px 20px; border-radius: 20px; }
+    }
+    @media (min-width: 769px) {
+      .box { max-width: 400px; }
+    }
+    @media (hover: hover) {
+      #yes:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h1 id="question">Are you a girl? 👀</h1>
+  <div class="btn-wrapper">
+    <button id="yes" onclick="yesClick()">YES 💖</button>
+    <button id="no" onpointerenter="moveNo(event)" onpointerdown="if(event.pointerType==='touch')event.preventDefault()">NO</button>
+  </div>
+  <div id="msg"></div>
+</div>
+
+<!-- SOUND EFFECTS -->
+<audio id="yesSound" src="click.mp3"></audio>
+<audio id="noSound" src="no.mp3"></audio>
+<audio id="winSound" src="success.mp3"></audio>
+
+<script>
+    let step = 0;
+  
+    const questions = [
+      "Are you a girl? 👀",
+      "Do you like chocolates? 🍫",
+      "Are you single? 😏",
+      "Do you smile when you see my message? 😌",
+      "Will you be my Valentine? 💖"
+    ];
+  
+    const yesMessages = [
+      "System verified ✅",
+      "Green flag detected 💚",
+      "Interesting 😈",
+      "I knew it 😌",
+      "YAYYYYY 🎉❤️"
+    ];
+  
+    const noMessages = [
+      "Liarrrrrrrrrrr!!!",
+      "🚩 Red flag detected. Rechecking…",
+      "Ignored successfully 😌",
+      "you don't have to lie bebecitaaaa"
+    ];
+  
+    function yesClick() {
+      const yesSound = document.getElementById("yesSound");
+      yesSound.currentTime = 0;
+      yesSound.play();
+  
+      document.getElementById("msg").innerText = yesMessages[step];
+      step++;
+  
+      if (step < questions.length) {
+        setTimeout(() => {
+          document.getElementById("question").innerText = questions[step];
+          document.getElementById("msg").innerText = "";
+        }, 900);
+      } else {
+        document.getElementById("winSound").play();
+
+        document.body.innerHTML = `
+            <div style="
+                min-height:100vh; min-height:100dvh;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                background:linear-gradient(135deg,#ff6b9d 0%,#ee2a7b 100%);
+                color:white;
+                text-align:center;
+                padding:20px;
+                font-family:'Nunito',sans-serif;
+            ">
+                <h1 style="font-size:clamp(1.5rem,6vw,2.5rem);margin-bottom:24px;">yayyyyyyyyy you are booked for 14th feb 💕</h1>
+                <button onclick="showLaughVideo()" style="
+                    padding:14px 28px;
+                    font-size:clamp(1rem,4vw,1.2rem);
+                    font-family:'Nunito',sans-serif;
+                    font-weight:700;
+                    background:white;
+                    color:#ee2a7b;
+                    border:none;
+                    border-radius:50px;
+                    cursor:pointer;
+                    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+                ">wait...one more thing</button>
+            </div>
+        `;
+      }
+    }
+  
+    function showLaughVideo() {
+      document.body.innerHTML = `
+        <div style="
+          min-height:100vh; min-height:100dvh;
+          display:flex;
+          flex-direction:column;
+          justify-content:center;
+          align-items:center;
+          background:linear-gradient(135deg,#ff6b9d 0%,#ee2a7b 100%);
+          color:white;
+          text-align:center;
+          padding:20px;
+          font-family:'Nunito',sans-serif;
+        ">
+          <h1 style="font-size:clamp(1.5rem,6vw,2.5rem);margin-bottom:16px;">hehhehehehhehe 💕</h1>
+          <video src="laugh.mp4" style="max-width:min(90vw,400px);width:100%;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.2);" autoplay muted loop playsinline></video>
+          <p style="margin-top:20px;font-size:clamp(1rem,4vw,1.25rem);">Wait… one more thing 🤭</p>
+        </div>
+      `;
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="
+            min-height:100vh; min-height:100dvh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#ffe4e9 0%,#ffd1dc 100%);
+            text-align:center;
+            padding:20px;
+            font-family:'Nunito',sans-serif;
+          ">
+            <h1 style="font-size:clamp(1.5rem,6vw,2.5rem);color:#c71585;margin-bottom:16px;">💀 PRANKED 💀</h1>
+            <img src="final.jpg" style="max-width:min(90vw,400px);width:100%;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.15);">
+            <p style="margin-top:20px;font-size:clamp(1rem,4vw,1.25rem);color:#b84d6b;">heheehehhehehhe 💖</p>
+          </div>
+        `;
+      }, 2500);
+    }
+
+    function noClick() {
+      const noSound = document.getElementById("noSound");
+      noSound.currentTime = 0;
+      noSound.play();
+  
+      // Before final question → show message
+      if (step < noMessages.length) {
+        document.getElementById("msg").innerText = noMessages[step];
+      }
+    }
+  
+    function moveNo() {
+      noClick();
+
+      // Final question: make NO impossible
+      if (step === questions.length - 1) {
+        const noBtn = document.getElementById("no");
+        noBtn.style.position = "fixed";
+        const btnW = 80, btnH = 50;
+        const maxX = Math.max(0, window.innerWidth - btnW - 20);
+        const maxY = Math.max(0, window.innerHeight - btnH - 20);
+        const x = Math.random() * maxX + 10;
+        const y = Math.random() * maxY + 10;
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+      }
+    }
+  </script>
+  
+
+</body>
+</html>
